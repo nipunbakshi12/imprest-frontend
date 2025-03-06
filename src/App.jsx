@@ -4,12 +4,14 @@ import { Route, Routes } from 'react-router-dom'
 import RaiseRequest from './components/RaiseRequest'
 import ManagerDashboard from './components/ManagerDashboard'
 import AdminDashboard from './components/AdminDashboard'
+import SignUp from './components/SignUp'
 
 const App = () => {
   return (
     <div className='text-red-500'>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<SignUp />} />
         <Route path="/raise-request" element={<RaiseRequest />} />
         <Route path="/manager-dashboard" element={<ManagerDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
