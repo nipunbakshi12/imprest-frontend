@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 const RaiseRequest = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
-  const [urgency, setUrgency] = useState("Routine");
+  const [urgency, setUrgency] = useState("");
   const [department, setDepartment] = useState("");
   const [requests, setRequests] = useState([]);
   const [departments, setDepartments] = useState([
@@ -16,11 +17,10 @@ const RaiseRequest = () => {
     "Operations",
   ]); // Add your department names
   const [vendors, setVendors] = useState([
-    { id: 1, name: "Vendor A", category: "IT Equipment", rating:"4.5" },
-    { id: 2, name: "Vendor B", category: "Office Supplies" , rating:"3.5"},
-    { id: 3, name: "Vendor C", category: "Software", rating:"4.5" },
-    { id: 4, name: "Vendor D", category: "Hardware", rating:"3.8" },
-    // Add more vendors as needed
+    { id: 1, name: "Vendor A", category: "IT Equipment", rating: "4.5" },
+    { id: 2, name: "Vendor B", category: "Office Supplies", rating: "3.5" },
+    { id: 3, name: "Vendor C", category: "Software", rating: "4.5" },
+    { id: 4, name: "Vendor D", category: "Hardware", rating: "3.8" },
   ]);
   const [selectedVendor, setSelectedVendor] = useState(null);
 
@@ -100,13 +100,54 @@ const RaiseRequest = () => {
     alert("Multi-Level Request Submitted Successfully!");
   };
 
+  useEffect(() => {
+    fetchAllImprests();
+  }, []);
+
+  const fetchAllImprests = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:5000/api/imprest/getAllImprestForEmployees",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("get api");
+      setRequests(response.data);
+    } catch (error) {
+      console.error("Error fetching requests:", error);
+      toast.error("Failed to fetch previous requests");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.get(
-      "http://localhost:5000/api/imprest/getAllImprest"
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(
+      "http://localhost:5000/api/imprest/createImprest",
+      {
+        description,
+        amount,
+        urgencyLevel: urgency,
+        vendorName: selectedVendor?.name,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
     );
-    console.log("Request Submitted", res);
+    if (res.data.success ) {
+      toast.success("Request Created Successfully")
+      await fetchAllImprests();
+    }
   };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -177,6 +218,7 @@ const RaiseRequest = () => {
                   value={urgency}
                   onChange={(e) => setUrgency(e.target.value)}
                 >
+                  <option>Select Urgency Level</option>
                   <option>Routine</option>
                   <option>Priority</option>
                   <option>Urgency</option>
@@ -303,7 +345,7 @@ const RaiseRequest = () => {
                             : "bg-green-100 text-green-800"
                         }`}
                       >
-                        {req.urgency}
+                        {req.urgencyLevel}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -317,6 +359,19 @@ const RaiseRequest = () => {
                         }`}
                       >
                         {req.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          req.status === "Approved"
+                            ? "bg-green-100 text-green-800"
+                            : req.status === "Rejected"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {req.vendorName}
                       </span>
                     </td>
                   </tr>
