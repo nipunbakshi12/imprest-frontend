@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [role, setRole] = useState("");
@@ -16,20 +16,6 @@ const LoginPage = () => {
     setRole(e.target.value);
     setDepartment("");
   };
-
-  // BASE_URL/sigunup
-
-  //   const handleLogin = () => {
-  //     localStorage.setItem("user", JSON.stringify({ role, department }));
-
-  //     if (role === "Employee") {
-  //       navigate("/raise-request");
-  //     } else if (role === "Manager") {
-  //       navigate("/manager-dashboard");
-  //     } else if (role === "Admin") {
-  //       navigate("/admin-dashboard");
-  //     }
-  //   };
 
   const handleLogin = async () => {
     console.log("email", email);
@@ -134,19 +120,13 @@ const LoginPage = () => {
         <div className="text-center space-y-2">
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}
-            <a
-              href="#"
+            <Link
+              to="/login"
               className="text-blue-600 hover:text-blue-800 font-semibold"
             >
               Sign up
-            </a>
+            </Link>
           </p>
-          <a
-            href="#"
-            className="block text-sm text-blue-600 hover:text-blue-800 font-semibold"
-          >
-            Forgot Password?
-          </a>
         </div>
       </div>
     </div>
