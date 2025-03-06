@@ -116,7 +116,7 @@ const RaiseRequest = () => {
         }
       );
       console.log("get api");
-      setRequests(response.data);
+      setRequests(response.data.data);
     } catch (error) {
       console.error("Error fetching requests:", error);
       toast.error("Failed to fetch previous requests");

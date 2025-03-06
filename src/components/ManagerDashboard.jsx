@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const initialFunds = 500000; // Initial funds for each manager
@@ -56,50 +57,87 @@ const ManagerDashboard = () => {
     localStorage.setItem("notifications", JSON.stringify(notifications));
   };
 
-  const handleAction = (index, action) => {
-    let updatedRequests = [...requests];
-    const requestAmount = parseInt(updatedRequests[index].amount);
+  // const handleAction = (index, action) => {
+  //   let updatedRequests = [...requests];
+  //   const requestAmount = parseInt(updatedRequests[index].amount);
 
-    if (action === "approve") {
-      if (funds >= requestAmount) {
-        updatedRequests[index].status = "Approved";
-        setFunds((prevFunds) => prevFunds - requestAmount);
-      } else {
-        alert("Insufficient funds to approve this request.");
-        return;
-      }
-    } else {
-      updatedRequests[index].status = "Rejected";
-    }
+  //   if (action === "approve") {
+  //     if (funds >= requestAmount) {
+  //       updatedRequests[index].status = "Approved";
+  //       setFunds((prevFunds) => prevFunds - requestAmount);
+  //     } else {
+  //       alert("Insufficient funds to approve this request.");
+  //       return;
+  //     }
+  //   } else {
+  //     updatedRequests[index].status = "Rejected";
+  //   }
 
-    setRequests(updatedRequests);
+  //   setRequests(updatedRequests);
 
-    // Update the global requests in localStorage
-    const allRequests = JSON.parse(localStorage.getItem("requests")) || [];
-    const updatedAllRequests = allRequests.map((req) =>
-      req.description === updatedRequests[index].description &&
-      req.department === updatedRequests[index].department
-        ? updatedRequests[index]
-        : req
-    );
+  //   // Update the global requests in localStorage
+  //   const allRequests = JSON.parse(localStorage.getItem("requests")) || [];
+  //   const updatedAllRequests = allRequests.map((req) =>
+  //     req.description === updatedRequests[index].description &&
+  //     req.department === updatedRequests[index].department
+  //       ? updatedRequests[index]
+  //       : req
+  //   );
 
-    localStorage.setItem("requests", JSON.stringify(updatedAllRequests));
+  //   localStorage.setItem("requests", JSON.stringify(updatedAllRequests));
 
-    // Update balances in localStorage
-    const allBalances = JSON.parse(localStorage.getItem("balances")) || {};
-    allBalances[department] =
-      funds - (action === "approve" ? requestAmount : 0);
-    localStorage.setItem("balances", JSON.stringify(allBalances));
+  //   // Update balances in localStorage
+  //   const allBalances = JSON.parse(localStorage.getItem("balances")) || {};
+  //   allBalances[department] =
+  //     funds - (action === "approve" ? requestAmount : 0);
+  //   localStorage.setItem("balances", JSON.stringify(allBalances));
 
-    // Update approved requests in Admin Dashboard
-    if (action === "approve") {
-      const approvedRequests =
-        JSON.parse(localStorage.getItem("approvedRequests")) || [];
-      approvedRequests.push(updatedRequests[index]);
-      localStorage.setItem(
-        "approvedRequests",
-        JSON.stringify(approvedRequests)
+  //   // Update approved requests in Admin Dashboard
+  //   if (action === "approve") {
+  //     const approvedRequests =
+  //       JSON.parse(localStorage.getItem("approvedRequests")) || [];
+  //     approvedRequests.push(updatedRequests[index]);
+  //     localStorage.setItem(
+  //       "approvedRequests",
+  //       JSON.stringify(approvedRequests)
+  //     );
+  //   }
+  // };
+
+  const handleAction = async (id, action) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      let status = action === "approve" ? "Approv" : "Reject";
+
+      const response = await axios.put(
+        `http://localhost:5000/api/imprest/updateRequestStatus/${id}`,
+        {
+          requestId:id,
+          status: status,
+          remarks:
+            action === "approve"
+              ? "Request approved by manager"
+              : "Request rejected by manager",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+
+      const data = response.data;
+
+      if (data.success) {
+        toast.success(`Request ${action}d successfully`);
+        fetchManagerData(); // Your function to fetch updated requests
+      } else {
+        toast.error(data.message || `Failed to ${action} request`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error(`Error ${action}ing request`);
     }
   };
 
@@ -300,13 +338,13 @@ const ManagerDashboard = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                           <button
-                            onClick={() => handleAction(index, "approve")}
+                            onClick={() => handleAction(req._id, "approve")}
                             className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg mr-2 transition duration-300 ease-in-out"
                           >
                             Approve
                           </button>
                           <button
-                            onClick={() => handleAction(index, "reject")}
+                            onClick={() => handleAction(req._id, "reject")}
                             className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
                           >
                             Reject
