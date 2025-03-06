@@ -113,18 +113,18 @@ const LoginPage = () => {
           onClick={handleLogin}
           className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-0.5"
         >
-          Login
+          Sign Up
         </button>
 
         {/* Additional Links */}
         <div className="text-center space-y-2">
           <p className="text-sm text-gray-600">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <Link
               to="/login"
               className="text-blue-600 hover:text-blue-800 font-semibold"
             >
-              Sign up
+              Sign In Here
             </Link>
           </p>
         </div>
