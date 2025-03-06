@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,6 +9,7 @@ const ManagerDashboard = () => {
   const [department, setDepartment] = useState("");
   const [funds, setFunds] = useState(initialFunds);
   const [requests, setRequests] = useState([]);
+  const [managerData, setManagerData] = useState([]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -100,6 +102,26 @@ const ManagerDashboard = () => {
       );
     }
   };
+
+  const fetchManagerData = async () => {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      "http://localhost:5000/api/imprest/getManagerData",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    console.log("response", response.data.data);
+    const managers = response.data.data;
+    setRequests(managers);
+  };
+
+  useEffect(() => {
+    fetchManagerData();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -207,6 +229,9 @@ const ManagerDashboard = () => {
                     Vendor Name
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -244,7 +269,33 @@ const ManagerDashboard = () => {
                                 : "bg-green-100 text-green-800"
                             }`}
                           >
-                            {req.urgency}
+                            {req.urgencyLevel}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              req.urgencyLevel === "urgencyLevel"
+                                ? "bg-red-100 text-red-800"
+                                : req.urgencyLevel === "Priority"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-green-100 text-green-800"
+                            }`}
+                          >
+                            {req.vendorName}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              req.urgencyLevel === "urgencyLevel"
+                                ? "bg-red-100 text-red-800"
+                                : req.urgencyLevel === "Priority"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-green-100 text-green-800"
+                            }`}
+                          >
+                            {req.status}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
