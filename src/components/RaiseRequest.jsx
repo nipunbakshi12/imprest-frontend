@@ -17,10 +17,10 @@ const RaiseRequest = () => {
     "Operations",
   ]); // Add your department names
   const [vendors, setVendors] = useState([
-    { id: 1, name: "Vendor A", category: "IT Equipment", rating: "4.5" },
-    { id: 2, name: "Vendor B", category: "Office Supplies", rating: "3.5" },
-    { id: 3, name: "Vendor C", category: "Software", rating: "4.5" },
-    { id: 4, name: "Vendor D", category: "Hardware", rating: "3.8" },
+    { id: 1, name: "Vendor A", category: "IT Equipment", rating: "4.5", payment: "Full Advance" },
+    { id: 2, name: "Vendor B", category: "Office Supplies", rating: "3.5", payment: "Partial Payment" },
+    { id: 3, name: "Vendor C", category: "Software", rating: "4.5", payment: "Credit" },
+    { id: 4, name: "Vendor D", category: "Hardware", rating: "3.8", payment: "Installments" },
   ]);
   const [selectedVendor, setSelectedVendor] = useState(null);
 
@@ -134,6 +134,7 @@ const RaiseRequest = () => {
         amount,
         urgencyLevel: urgency,
         vendorName: selectedVendor?.name,
+        paymentDetail: selectedVendor?.payment
       },
       {
         headers: {
@@ -142,7 +143,7 @@ const RaiseRequest = () => {
         },
       }
     );
-    if (res.data.success ) {
+    if (res.data.success) {
       toast.success("Request Created Successfully")
       await fetchAllImprests();
     }
@@ -248,15 +249,17 @@ const RaiseRequest = () => {
                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Rating
                         </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Payment Terms
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200 text-black ">
                       {vendors.map((vendor) => (
                         <tr
                           key={vendor.id}
-                          className={`hover:bg-gray-50 cursor-pointer ${
-                            selectedVendor?.id === vendor.id ? "bg-blue-50" : ""
-                          }`}
+                          className={`hover:bg-gray-50 cursor-pointer ${selectedVendor?.id === vendor.id ? "bg-blue-50" : ""
+                            }`}
                           onClick={() => setSelectedVendor(vendor)}
                         >
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -276,6 +279,9 @@ const RaiseRequest = () => {
                           </td>
                           <td className="px-6 py-4 text-yellow-500 text-lg whitespace-nowrap">
                             {vendor.rating}
+                          </td>
+                          <td className="px-6 py-4 text-yellow-500 text-lg whitespace-nowrap">
+                            {vendor.payment}
                           </td>
                         </tr>
                       ))}
@@ -323,6 +329,9 @@ const RaiseRequest = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Vendor Name
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Payment Terms
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -337,43 +346,54 @@ const RaiseRequest = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.urgency === "Urgency"
-                            ? "bg-red-100 text-red-800"
-                            : req.urgency === "Priority"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.urgency === "Urgency"
+                          ? "bg-red-100 text-red-800"
+                          : req.urgency === "Priority"
                             ? "bg-yellow-100 text-yellow-800"
                             : "bg-green-100 text-green-800"
-                        }`}
+                          }`}
                       >
                         {req.urgencyLevel}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.status === "Approved"
-                            ? "bg-green-100 text-green-800"
-                            : req.status === "Rejected"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : req.status === "Rejected"
                             ? "bg-red-100 text-red-800"
                             : "bg-yellow-100 text-yellow-800"
-                        }`}
+                          }`}
                       >
                         {req.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.status === "Approved"
-                            ? "bg-green-100 text-green-800"
-                            : req.status === "Rejected"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : req.status === "Rejected"
                             ? "bg-red-100 text-red-800"
                             : "bg-yellow-100 text-yellow-800"
-                        }`}
+                          }`}
                       >
                         {req.vendorName}
                       </span>
                     </td>
+
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : req.status === "Rejected"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                          }`}
+                      >
+                        {req.paymentDetail}
+                      </span>
+                    </td>
+
                   </tr>
                 ))}
               </tbody>
