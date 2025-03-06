@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -27,6 +28,11 @@ const LoginPage = () => {
       role,
       department,
     });
+
+    if (response.data.token) {
+      navigate('/login')
+      toast.success("New Account Created Successfully")
+    }
 
     console.log("api response", response);
   };
