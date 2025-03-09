@@ -10,7 +10,6 @@ const ManagerDashboard = () => {
   const [department, setDepartment] = useState("");
   const [funds, setFunds] = useState(initialFunds);
   const [requests, setRequests] = useState([]);
-  const [managerData, setManagerData] = useState([]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -113,7 +112,7 @@ const ManagerDashboard = () => {
       const response = await axios.put(
         `http://localhost:5000/api/imprest/updateRequestStatus/${id}`,
         {
-          requestId:id,
+          requestId: id,
           status: status,
           remarks:
             action === "approve"
@@ -141,10 +140,30 @@ const ManagerDashboard = () => {
     }
   };
 
+  // const fetchManagerData = async () => {
+  //   const token = localStorage.getItem("token");
+
+  //   const response = await axios.get(
+  //     "http://localhost:5000/api/imprest/getManagerData",
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     }
+  //   );
+  //   console.log("response", response.data.data);
+  //   const managers = response.data.data;
+  //   setRequests(managers);
+  // };
+
+  // useEffect(() => {
+  //   fetchManagerData();
+  // }, []);
+
   const fetchManagerData = async () => {
     const token = localStorage.getItem("token");
-
-    const response = await axios.get(
+    console.log("token is", token);
+    const manData = await axios.get(
       "http://localhost:5000/api/imprest/getManagerData",
       {
         headers: {
@@ -152,9 +171,8 @@ const ManagerDashboard = () => {
         },
       }
     );
-    console.log("response", response.data.data);
-    const managers = response.data.data;
-    setRequests(managers);
+    const apiResponse = manData.data.data;
+    setRequests(apiResponse);
   };
 
   useEffect(() => {
@@ -300,9 +318,9 @@ const ManagerDashboard = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
                             className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              req.urgency === "Urgency"
+                              req.urgencyLevel === "Urgency"
                                 ? "bg-red-100 text-red-800"
-                                : req.urgency === "Priority"
+                                : req.urgencyLevel === "Priority"
                                 ? "bg-yellow-100 text-yellow-800"
                                 : "bg-green-100 text-green-800"
                             }`}

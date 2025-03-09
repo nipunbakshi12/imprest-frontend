@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
@@ -12,29 +14,90 @@ const AdminDashboard = () => {
   const [specialFunds, setSpecialFunds] = useState(10000000);
   const [activeTab, setActiveTab] = useState("approved");
   const departments = ["IT", "Finance", "Marketing", "HR"];
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  // const url = import.meta.env.BASE_URL
+
+  // useEffect(() => {
+  //   const savedBalances = JSON.parse(localStorage.getItem("balances")) || {
+  //     IT: 500000,
+  //     Finance: 500000,
+  //     Marketing: 500000,
+  //     HR: 500000,
+  //   };
+  //   setBalances(savedBalances);
+
+  //   setApprovedRequests(
+  //     JSON.parse(localStorage.getItem("approvedRequests")) || []
+  //   );
+  //   setDisbursedFunds(JSON.parse(localStorage.getItem("disbursedFunds")) || []);
+  //   setMultiLevelRequests(
+  //     JSON.parse(localStorage.getItem("multiLevelRequests")) || []
+  //   );
+  //   setNotifications(JSON.parse(localStorage.getItem("notifications")) || []);
+  //   setSpecialFunds(
+  //     JSON.parse(localStorage.getItem("specialFunds")) || 10000000
+  //   ); // Load Special Funds
+  // }, []);
+
+  const fetchAdminLeads = async () => {
+    const response = await axios.get(
+      `http://localhost:5000/api/imprest/getAdminData`
+    );
+    const data = response.data.data;
+    setApprovedRequests(data);
+  };
 
   useEffect(() => {
-    const savedBalances = JSON.parse(localStorage.getItem("balances")) || {
-      IT: 500000,
-      Finance: 500000,
-      Marketing: 500000,
-      HR: 500000,
-    };
-    setBalances(savedBalances);
-
-    setApprovedRequests(
-      JSON.parse(localStorage.getItem("approvedRequests")) || []
-    );
-    setDisbursedFunds(JSON.parse(localStorage.getItem("disbursedFunds")) || []);
-    setMultiLevelRequests(
-      JSON.parse(localStorage.getItem("multiLevelRequests")) || []
-    );
-    setNotifications(JSON.parse(localStorage.getItem("notifications")) || []);
-    setSpecialFunds(
-      JSON.parse(localStorage.getItem("specialFunds")) || 10000000
-    ); // Load Special Funds
+    fetchAdminLeads();
   }, []);
+
+  function convertToReadableDate(dateString) {
+    const date = new Date(dateString);
+
+    // Array for months
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    // Get date components
+    const day = date.getDate();
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    // Function to add ordinal suffix to day
+    function getOrdinalSuffix(day) {
+      if (day > 3 && day < 21) return "th";
+      switch (day % 10) {
+        case 1:
+          return "st";
+        case 2:
+          return "nd";
+        case 3:
+          return "rd";
+        default:
+          return "th";
+      }
+    }
+
+    // Combine all parts
+    return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+  }
+
+  const handleModalOpen = (e) => {
+    console.log("test", e);
+  };
 
   const handleRefill = () => {
     if (!refillAmount || refillAmount <= 0) {
@@ -178,13 +241,19 @@ const AdminDashboard = () => {
                       <thead className="bg-gray-50">
                         <tr>
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Department
+                            Description
                           </th>
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Amount
                           </th>
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Department
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Date
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            View
                           </th>
                         </tr>
                       </thead>
@@ -192,13 +261,21 @@ const AdminDashboard = () => {
                         {approvedRequests.map((req, index) => (
                           <tr key={index} className="hover:bg-gray-50">
                             <td className="px-6 py-4 whitespace-nowrap">
-                              {req.department}
+                              {req.description}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-green-600 font-medium">
                               ₹{req.amount}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                              {req.date}
+                              {req.department}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              {convertToReadableDate(req.createdAt)}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-blue-300  ">
+                              <button onClick={(e) => handleModalOpen(e)}>
+                                <FaEye />
+                              </button>
                             </td>
                           </tr>
                         ))}

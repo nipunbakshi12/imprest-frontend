@@ -17,10 +17,34 @@ const RaiseRequest = () => {
     "Operations",
   ]); // Add your department names
   const [vendors, setVendors] = useState([
-    { id: 1, name: "Vendor A", category: "IT Equipment", rating: "4.5", payment: "Full Advance" },
-    { id: 2, name: "Vendor B", category: "Office Supplies", rating: "3.5", payment: "Partial Payment" },
-    { id: 3, name: "Vendor C", category: "Software", rating: "4.5", payment: "Credit" },
-    { id: 4, name: "Vendor D", category: "Hardware", rating: "3.8", payment: "Installments" },
+    {
+      id: 1,
+      name: "Vendor A",
+      category: "IT Equipment",
+      rating: "4.5",
+      payment: "Full Advance",
+    },
+    {
+      id: 2,
+      name: "Vendor B",
+      category: "Office Supplies",
+      rating: "3.5",
+      payment: "Partial Payment",
+    },
+    {
+      id: 3,
+      name: "Vendor C",
+      category: "Software",
+      rating: "4.5",
+      payment: "Credit",
+    },
+    {
+      id: 4,
+      name: "Vendor D",
+      category: "Hardware",
+      rating: "3.8",
+      payment: "Installments",
+    },
   ]);
   const [selectedVendor, setSelectedVendor] = useState(null);
 
@@ -123,30 +147,84 @@ const RaiseRequest = () => {
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const token = localStorage.getItem("token");
+
+  //   const res = await axios.post(
+  //     "http://localhost:5000/api/imprest/createImprest",
+  //     {
+  //       description,
+  //       amount,
+  //       urgencyLevel: urgency,
+  //       vendorName: selectedVendor?.name,
+  //       paymentDetail: selectedVendor?.payment
+  //     },
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   );
+  //   if (res.data.success) {
+  //     toast.success("Request Created Successfully")
+  //     await fetchAllImprests();
+  //   }
+  // };
+
+  // salonniiiii
+
+  // const [row, setRow] = useState([]);
+
+  // const table = async () => {
+  //   const token = localStorage.getItem("token");
+  //   const response = await axios.get(
+  //     "http://localhost:5000/api/imprest/getAllImprestForEmployees",
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     }
+  //   );
+  //   console.log("api response", response.data.data);
+  //   const api_response = response.data.data;
+  //   setRow(api_response);
+  //   setRequests(api_response)
+  // };
+
+  // useEffect(() => {
+  //   table();
+  // }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
+    console.log("vendorDetails", selectedVendor?.payment);
+    const vendorDet = {
+      description,
+      amount,
+      urgency,
+    };
 
-    const res = await axios.post(
+    const token = localStorage.getItem("token");
+    console.log("token is", token);
+
+    const response = await axios.post(
       "http://localhost:5000/api/imprest/createImprest",
       {
         description,
         amount,
         urgencyLevel: urgency,
         vendorName: selectedVendor?.name,
-        paymentDetail: selectedVendor?.payment
+        paymentDetail: selectedVendor?.payment,
       },
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
         },
       }
     );
-    if (res.data.success) {
-      toast.success("Request Created Successfully")
-      await fetchAllImprests();
-    }
+    console.log(response);
   };
 
   return (
@@ -258,8 +336,9 @@ const RaiseRequest = () => {
                       {vendors.map((vendor) => (
                         <tr
                           key={vendor.id}
-                          className={`hover:bg-gray-50 cursor-pointer ${selectedVendor?.id === vendor.id ? "bg-blue-50" : ""
-                            }`}
+                          className={`hover:bg-gray-50 cursor-pointer ${
+                            selectedVendor?.id === vendor.id ? "bg-blue-50" : ""
+                          }`}
                           onClick={() => setSelectedVendor(vendor)}
                         >
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -346,36 +425,39 @@ const RaiseRequest = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.urgency === "Urgency"
-                          ? "bg-red-100 text-red-800"
-                          : req.urgency === "Priority"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          req.urgency === "Urgency"
+                            ? "bg-red-100 text-red-800"
+                            : req.urgency === "Priority"
                             ? "bg-yellow-100 text-yellow-800"
                             : "bg-green-100 text-green-800"
-                          }`}
+                        }`}
                       >
                         {req.urgencyLevel}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
-                          ? "bg-green-100 text-green-800"
-                          : req.status === "Rejected"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          req.status === "Approved"
+                            ? "bg-green-100 text-green-800"
+                            : req.status === "Rejected"
                             ? "bg-red-100 text-red-800"
                             : "bg-yellow-100 text-yellow-800"
-                          }`}
+                        }`}
                       >
                         {req.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
-                          ? "bg-green-100 text-green-800"
-                          : req.status === "Rejected"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          req.status === "Approved"
+                            ? "bg-green-100 text-green-800"
+                            : req.status === "Rejected"
                             ? "bg-red-100 text-red-800"
                             : "bg-yellow-100 text-yellow-800"
-                          }`}
+                        }`}
                       >
                         {req.vendorName}
                       </span>
@@ -383,17 +465,17 @@ const RaiseRequest = () => {
 
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
-                          ? "bg-green-100 text-green-800"
-                          : req.status === "Rejected"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                          req.status === "Approved"
+                            ? "bg-green-100 text-green-800"
+                            : req.status === "Rejected"
                             ? "bg-red-100 text-red-800"
                             : "bg-yellow-100 text-yellow-800"
-                          }`}
+                        }`}
                       >
                         {req.paymentDetail}
                       </span>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
