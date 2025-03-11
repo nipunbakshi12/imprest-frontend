@@ -4,6 +4,8 @@ import { BiNotification } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { IoNotificationsOutline } from "react-icons/io5";
+// import { FaUserPlus } from "react-icons/fa";
+import Modal from './Modal'
 
 const AdminDashboard = () => {
   const [refillAmount, setRefillAmount] = useState("");
@@ -17,6 +19,31 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("approved");
   const departments = ["IT", "Finance", "Marketing", "HR"];
   const navigate = useNavigate();
+
+  // Modal States
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // Notification Modals
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+
+  const openNotificationModal = () => {
+    setIsNotificationModalOpen(true);
+  };
+
+  const closeNotificationModal = () => {
+    setIsNotificationModalOpen(false);
+  };
+
+
+
+
+
 
   // const url = import.meta.env.BASE_URL
 
@@ -147,12 +174,21 @@ const AdminDashboard = () => {
                 <IoNotificationsOutline />
               </div>
 
+              <button
+                onClick={handleOpenModal}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-5 rounded-lg transition duration-300 ease-in-out flex items-center gap-2"
+              >
+                New User
+              </button>
+
+              <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
+
               <div>
                 <button
                   onClick={() => {
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
-                    navigate("/login");
+                    navigate("/");
                   }}
                   className="bg-red-500 hover:bg-red-600  text-white font-semibold py-2.5 px-5 rounded-lg transition duration-300 ease-in-out flex items-center gap-2"
                 >
@@ -222,11 +258,10 @@ const AdminDashboard = () => {
               (tab) => (
                 <button
                   key={tab}
-                  className={`flex-1 py-4 px-6 text-sm font-medium transition duration-200 ${
-                    activeTab === tab
-                      ? "bg-blue-500 text-white"
-                      : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-                  }`}
+                  className={`flex-1 py-4 px-6 text-sm font-medium transition duration-200 ${activeTab === tab
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                    }`}
                   onClick={() => setActiveTab(tab)}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1).replace("-", " ")}

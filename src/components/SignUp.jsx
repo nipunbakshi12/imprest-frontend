@@ -30,7 +30,7 @@ const LoginPage = () => {
     });
 
     if (response.data.token) {
-      navigate('/login')
+      navigate('/')
       toast.success("New Account Created Successfully")
     }
 
@@ -38,8 +38,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-blue-200">
-      <div className="bg-white p-8 rounded-xl shadow-2xl w-96 space-y-6">
+    <div className="flex items-center justify-center">
+      <div className="bg-white p-8 rounded-xl w-96 space-y-6">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
           Sign Up
         </h2>
@@ -127,7 +127,7 @@ const LoginPage = () => {
           <p className="text-sm text-gray-600">
             Already have an account?{" "}
             <Link
-              to="/login"
+              to="/"
               className="text-blue-600 hover:text-blue-800 font-semibold"
             >
               Sign In Here
