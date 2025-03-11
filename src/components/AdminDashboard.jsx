@@ -154,7 +154,7 @@ const AdminDashboard = () => {
                     localStorage.removeItem("user");
                     navigate("/login");
                   }}
-                  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-5 rounded-lg transition duration-300 ease-in-out flex items-center gap-2"
+                  className="bg-red-500 hover:bg-red-600  text-white font-semibold py-2.5 px-5 rounded-lg transition duration-300 ease-in-out flex items-center gap-2"
                 >
                   <svg
                     className="w-5 h-5"
@@ -178,7 +178,7 @@ const AdminDashboard = () => {
 
         {/* Refill Funds Section */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <h3 className="text-xl font-bold text-gray-800 mb-6">Refill Funds</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-6 ">Refill Funds</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
