@@ -61,7 +61,7 @@ const RaiseRequest = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     // Navigate to login page
-    navigate("/login");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -234,7 +234,7 @@ const RaiseRequest = () => {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <div className="flex justify-between items-center">
             <h2 className="text-3xl font-bold text-gray-800">Raise Request</h2>
-            <Link to="/login">
+            <Link to="/">
               <button
                 onClick={handleLogout}
                 className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-5 rounded-lg transition duration-300 ease-in-out flex items-center gap-2 shadow-md"
@@ -336,9 +336,8 @@ const RaiseRequest = () => {
                       {vendors.map((vendor) => (
                         <tr
                           key={vendor.id}
-                          className={`hover:bg-gray-50 cursor-pointer ${
-                            selectedVendor?.id === vendor.id ? "bg-blue-50" : ""
-                          }`}
+                          className={`hover:bg-gray-50 cursor-pointer ${selectedVendor?.id === vendor.id ? "bg-blue-50" : ""
+                            }`}
                           onClick={() => setSelectedVendor(vendor)}
                         >
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -425,39 +424,36 @@ const RaiseRequest = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.urgency === "Urgency"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.urgency === "Urgency"
                             ? "bg-red-100 text-red-800"
                             : req.urgency === "Priority"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-green-100 text-green-800"
-                        }`}
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
                       >
                         {req.urgencyLevel}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.status === "Approved"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
                             ? "bg-green-100 text-green-800"
                             : req.status === "Rejected"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-yellow-100 text-yellow-800"
-                        }`}
+                              ? "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
                       >
                         {req.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.status === "Approved"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
                             ? "bg-green-100 text-green-800"
                             : req.status === "Rejected"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-yellow-100 text-yellow-800"
-                        }`}
+                              ? "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
                       >
                         {req.vendorName}
                       </span>
@@ -465,13 +461,12 @@ const RaiseRequest = () => {
 
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.status === "Approved"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
                             ? "bg-green-100 text-green-800"
                             : req.status === "Rejected"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-yellow-100 text-yellow-800"
-                        }`}
+                              ? "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
                       >
                         {req.paymentDetail}
                       </span>

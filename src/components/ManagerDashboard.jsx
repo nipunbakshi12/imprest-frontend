@@ -193,7 +193,7 @@ const ManagerDashboard = () => {
               onClick={() => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("user");
-                navigate("/login");
+                navigate("/");
               }}
               className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-5 rounded-lg transition duration-300 ease-in-out flex items-center gap-2 shadow-md"
             >
@@ -317,39 +317,36 @@ const ManagerDashboard = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              req.urgencyLevel === "Urgency"
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.urgencyLevel === "Urgency"
                                 ? "bg-red-100 text-red-800"
                                 : req.urgencyLevel === "Priority"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-green-100 text-green-800"
-                            }`}
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : "bg-green-100 text-green-800"
+                              }`}
                           >
                             {req.urgencyLevel}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              req.urgencyLevel === "urgencyLevel"
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.urgencyLevel === "urgencyLevel"
                                 ? "bg-red-100 text-red-800"
                                 : req.urgencyLevel === "Priority"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-green-100 text-green-800"
-                            }`}
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : "bg-green-100 text-green-800"
+                              }`}
                           >
                             {req.vendorName}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                              req.urgencyLevel === "urgencyLevel"
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.urgencyLevel === "urgencyLevel"
                                 ? "bg-red-100 text-red-800"
                                 : req.urgencyLevel === "Priority"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-green-100 text-green-800"
-                            }`}
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : "bg-green-100 text-green-800"
+                              }`}
                           >
                             {req.status}
                           </span>
