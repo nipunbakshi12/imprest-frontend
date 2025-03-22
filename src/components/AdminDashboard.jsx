@@ -4,6 +4,9 @@ import { BiNotification } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { IoNotificationsOutline } from "react-icons/io5";
+// import { FaUserPlus } from "react-icons/fa";
+import Modal from './Modal'
+import toast from "react-hot-toast";
 
 const AdminDashboard = () => {
   const [refillAmount, setRefillAmount] = useState("");
@@ -16,35 +19,35 @@ const AdminDashboard = () => {
   const [specialFunds, setSpecialFunds] = useState(10000000);
   const [activeTab, setActiveTab] = useState("approved");
   const departments = ["IT", "Finance", "Marketing", "HR"];
+
+
+  const [isReading, setIsReading] = useState(false); // Add state for read status
+
   const navigate = useNavigate();
 
-  // const url = import.meta.env.BASE_URL
+  // Modal States
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
-  // useEffect(() => {
-  //   const savedBalances = JSON.parse(localStorage.getItem("balances")) || {
-  //     IT: 500000,
-  //     Finance: 500000,
-  //     Marketing: 500000,
-  //     HR: 500000,
-  //   };
-  //   setBalances(savedBalances);
+  // Notification Modals
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
 
-  //   setApprovedRequests(
-  //     JSON.parse(localStorage.getItem("approvedRequests")) || []
-  //   );
-  //   setDisbursedFunds(JSON.parse(localStorage.getItem("disbursedFunds")) || []);
-  //   setMultiLevelRequests(
-  //     JSON.parse(localStorage.getItem("multiLevelRequests")) || []
-  //   );
-  //   setNotifications(JSON.parse(localStorage.getItem("notifications")) || []);
-  //   setSpecialFunds(
-  //     JSON.parse(localStorage.getItem("specialFunds")) || 10000000
-  //   ); // Load Special Funds
-  // }, []);
+  const openNotificationModal = () => {
+    setIsNotificationModalOpen(true);
+  };
+
+  const closeNotificationModal = () => {
+    setIsNotificationModalOpen(false);
+  };
 
   const fetchAdminLeads = async () => {
     const response = await axios.get(
-      `http://localhost:5000/api/imprest/getAdminData`
+      'http://localhost:5000/api/imprest/getAdminData'
     );
     const data = response.data.data;
     setApprovedRequests(data);
@@ -101,36 +104,99 @@ const AdminDashboard = () => {
     console.log("test", e);
   };
 
-  const handleRefill = () => {
-    if (!refillAmount || refillAmount <= 0) {
-      alert("Please enter a valid refill amount.");
-      return;
+  const handleRefill = async () => {
+    const token = localStorage.getItem('token')
+    const res = await axios.post('http://localhost:5000/api/imprest/refillAmount',
+      {
+        refillAmount: refillAmount,
+        department: selectedDepartment
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      },
+    )
+    if (res.data.success) {
+      toast.success("Funds has been sent")
+      setRefillAmount("")
     }
-
-    const newDisbursement = {
-      department: selectedDepartment,
-      amount: parseInt(refillAmount),
-      date: new Date().toLocaleString(),
-    };
-
-    const updatedDisbursedFunds = [...disbursedFunds, newDisbursement];
-    setDisbursedFunds(updatedDisbursedFunds);
-    localStorage.setItem(
-      "disbursedFunds",
-      JSON.stringify(updatedDisbursedFunds)
-    );
-
-    const updatedBalances = {
-      ...balances,
-      [selectedDepartment]:
-        (balances[selectedDepartment] || 0) + parseInt(refillAmount),
-    };
-    setBalances(updatedBalances);
-    localStorage.setItem("balances", JSON.stringify(updatedBalances));
-
-    setRefillAmount("");
-    alert(`₹${refillAmount} refilled to ${selectedDepartment} successfully!`);
   };
+
+  const getDisbursedFunds = async () => {
+    const res1 = await axios.get('http://localhost:5000/api/imprest/disbursedFunds')
+    const disbursedFunds = res1.data.data
+    setDisbursedFunds(disbursedFunds)
+  }
+
+  // GET NOTIFICATIONS
+  const getNotifications = async () => {
+    const token = localStorage.getItem("token");
+    const notifications = await axios.get('http://localhost:5000/api/imprest/notification', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    // console.log(notifications.data.data)
+    const allNotifications = notifications.data.data
+    console.log(allNotifications)
+    setNotifications(allNotifications)
+  }
+
+  function formatDate(isoString) {
+    const date = new Date(isoString);
+
+    // Options for formatting the date
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: true, // Use 12-hour time format
+    };
+
+    // Use Intl.DateTimeFormat for localization and formatting
+    return new Intl.DateTimeFormat('en-US', options).format(date);
+  }
+
+  const handleRead = async (id) => {
+    setIsReading(true); // Change color immediately
+    try {
+      console.log("id", id)
+      const token = localStorage.getItem("token");
+      const response = await axios.put(
+        `http://localhost:5000/api/imprest/notification/${id}`,
+        { read: true },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log("RESPONSE", response)
+
+      if (response?.data?.success) {
+        console.log("Hello")
+        toast.success("Notification marked as read");
+        getNotifications()
+      } else {
+        toast.error(response || "FAILED TO MARK NOTIFICATION");
+        setIsReading(false); // Reset if failed
+      }
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+      toast.error("Error marking notification as read");
+    }
+  };
+
+
+  useEffect(() => {
+    getNotifications()
+    getDisbursedFunds()
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -143,16 +209,107 @@ const AdminDashboard = () => {
             </h2>
 
             <div className="flex justify-center items-center text-black gap-4">
-              <div className="text-3xl " >
-                <IoNotificationsOutline />
+
+              {/* <div className="relative">
+                <div className="text-3xl cursor-pointer" onClick={openNotificationModal}>
+                  <IoNotificationsOutline />
+                  {notifications.length > 0 && (
+                    <span className="absolute top-0 right-0 -mt-1 -mr-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
+                      {notifications.length}
+
+                    </span>
+                  )}
+                </div>
+
+                {isNotificationModalOpen && (
+                  <div className="absolute top-full mt-2 right-0 bg-white p-4 rounded shadow-md max-w-sm w-screen z-50">
+                    <h2 className="text-xl font-semibold">Notifications</h2>
+                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                      {notifications.map((n, i) => (
+                        <div
+                          key={i}
+                          className="bg-blue-100 text-blue-800 p-4 rounded-lg shadow-md hover:bg-blue-200 transition duration-300 ease-in-out"
+                        >
+                          <p>{n.message} - {formatDate(n.createdAt)}</p>
+                          <button
+                            onClick={() => handleRead(n._id)} // Use n.id or n._id based on your data structure
+                            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out"
+                          >
+                            Mark as read
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <button
+                      onClick={closeNotificationModal} // Close the modal when clicked
+                      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out"
+                    >
+                      Close
+                    </button>
+                  </div>
+                )}
+
+
+              </div> */}
+
+              <div className="relative">
+                {/* Notification Icon that triggers the modal on click */}
+                <div className="text-3xl cursor-pointer" onClick={openNotificationModal}>
+                  <IoNotificationsOutline />
+                  {notifications.length > 0 && (
+                    <span className="absolute top-0 right-0 -mt-1 -mr-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
+                      {notifications.length}
+                    </span>
+                  )}
+                </div>
+
+                {isNotificationModalOpen && (
+                  <div className="absolute top-full mt-2 right-0 bg-white p-4 rounded shadow-md max-w-lg w-screen z-50">
+                    <h2 className="text-xl font-semibold">Notifications</h2>
+                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                      {notifications.map((n, i) => (
+                        <div
+                          key={i}
+                          className="bg-blue-100 text-blue-800 p-4 rounded-lg shadow-md hover:bg-blue-200 transition duration-300 ease-in-out"
+                        >
+                          <p>
+                            {n.message} - {formatDate(n.createdAt)}
+                            <span
+                              onClick={() => handleRead(n._id)}
+                              className={`ml-2 cursor-pointer transition duration-300 ease-in-out ${isReading ? 'text-red-600' : 'text-blue-600'
+                                } underline hover:text-red-800`} // Conditional styling
+                            >
+                              Mark as read
+                            </span>
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                    <button
+                      onClick={closeNotificationModal}
+                      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out"
+                    >
+                      Close
+                    </button>
+                  </div>
+                )}
               </div>
+
+              <button
+                onClick={handleOpenModal}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-5 rounded-lg transition duration-300 ease-in-out flex items-center gap-2"
+              >
+                New User
+              </button>
+
+              <Modal isOpen={isModalOpen} onClose={handleCloseModal} />
 
               <div>
                 <button
                   onClick={() => {
                     localStorage.removeItem("token");
                     localStorage.removeItem("user");
-                    navigate("/login");
+                    navigate("/");
                   }}
                   className="bg-red-500 hover:bg-red-600  text-white font-semibold py-2.5 px-5 rounded-lg transition duration-300 ease-in-out flex items-center gap-2"
                 >
@@ -218,15 +375,14 @@ const AdminDashboard = () => {
         {/* Tabs Navigation */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
           <div className="flex border-b">
-            {["approved", "disbursed", "multi-level", "notifications"].map(
+            {["approved", "disbursed"].map(
               (tab) => (
                 <button
                   key={tab}
-                  className={`flex-1 py-4 px-6 text-sm font-medium transition duration-200 ${
-                    activeTab === tab
-                      ? "bg-blue-500 text-white"
-                      : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-                  }`}
+                  className={`flex-1 py-4 px-6 text-sm font-medium transition duration-200 ${activeTab === tab
+                    ? "bg-blue-500 text-white"
+                    : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                    }`}
                   onClick={() => setActiveTab(tab)}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1).replace("-", " ")}
@@ -297,12 +453,69 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {/* Similar styling for other tabs... */}
+            {activeTab === "disbursed" && (
+              <div>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  Disbursed Requests
+                </h3>
+                {disbursedFunds.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">
+                    No approved requests.
+                  </p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Department
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Amount
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Date
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {disbursedFunds.map((req, index) => (
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              {req.department}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-green-600 font-medium">
+                              ₹{req.refillAmount}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              {convertToReadableDate(req.createdAt)}
+                            </td>
+
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
+
+          {/* <div className="p-6">
+            {activeTab === "disbursed" && (
+              <div>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  Disbursed Requests
+                </h3>
+              </div>
+            )}
+
+          </div> */}
+
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default AdminDashboard;

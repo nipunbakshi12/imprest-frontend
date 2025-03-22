@@ -224,7 +224,15 @@ const RaiseRequest = () => {
         },
       }
     );
-    console.log(response);
+    console.log("nipun", response);
+    if (response?.data?.success) {
+      toast.success("Request has been raised")
+      setDescription("")
+      setAmount("")
+      setSelectedVendor(null)
+      setUrgency("")
+      fetchAllImprests()
+    }
   };
 
   return (
@@ -336,9 +344,8 @@ const RaiseRequest = () => {
                       {vendors.map((vendor) => (
                         <tr
                           key={vendor.id}
-                          className={`hover:bg-gray-50 cursor-pointer ${
-                            selectedVendor?.id === vendor.id ? "bg-blue-50" : ""
-                          }`}
+                          className={`hover:bg-gray-50 cursor-pointer ${selectedVendor?.id === vendor.id ? "bg-blue-50" : ""
+                            }`}
                           onClick={() => setSelectedVendor(vendor)}
                         >
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -425,39 +432,36 @@ const RaiseRequest = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.urgency === "Urgency"
-                            ? "bg-red-100 text-red-800"
-                            : req.urgency === "Priority"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.urgency === "Urgency"
+                          ? "bg-red-100 text-red-800"
+                          : req.urgency === "Priority"
                             ? "bg-yellow-100 text-yellow-800"
                             : "bg-green-100 text-green-800"
-                        }`}
+                          }`}
                       >
                         {req.urgencyLevel}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.status === "Approved"
-                            ? "bg-green-100 text-green-800"
-                            : req.status === "Rejected"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : req.status === "Rejected"
                             ? "bg-red-100 text-red-800"
                             : "bg-yellow-100 text-yellow-800"
-                        }`}
+                          }`}
                       >
                         {req.status}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.status === "Approved"
-                            ? "bg-green-100 text-green-800"
-                            : req.status === "Rejected"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : req.status === "Rejected"
                             ? "bg-red-100 text-red-800"
                             : "bg-yellow-100 text-yellow-800"
-                        }`}
+                          }`}
                       >
                         {req.vendorName}
                       </span>
@@ -465,13 +469,12 @@ const RaiseRequest = () => {
 
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
-                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          req.status === "Approved"
-                            ? "bg-green-100 text-green-800"
-                            : req.status === "Rejected"
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${req.status === "Approved"
+                          ? "bg-green-100 text-green-800"
+                          : req.status === "Rejected"
                             ? "bg-red-100 text-red-800"
                             : "bg-yellow-100 text-yellow-800"
-                        }`}
+                          }`}
                       >
                         {req.paymentDetail}
                       </span>
