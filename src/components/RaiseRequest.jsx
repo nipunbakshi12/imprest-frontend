@@ -61,7 +61,7 @@ const RaiseRequest = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     // Navigate to login page
-    navigate("/login");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -75,6 +75,14 @@ const RaiseRequest = () => {
     setRequests(
       storedRequests.filter((req) => req.department === user.department)
     );
+
+    // Filter vendors based on department
+    // const departmentVendors = vendors.filter(
+    //   (vendor) => vendor.department === user.department
+    // );
+    // setVendors(departmentVendors);
+
+
   }, []);
 
   const validateForm = () => {
@@ -242,7 +250,7 @@ const RaiseRequest = () => {
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <div className="flex justify-between items-center">
             <h2 className="text-3xl font-bold text-gray-800">Raise Request</h2>
-            <Link to="/login">
+            <Link to="/">
               <button
                 onClick={handleLogout}
                 className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-5 rounded-lg transition duration-300 ease-in-out flex items-center gap-2 shadow-md"

@@ -487,7 +487,7 @@ const ManagerDashboard = () => {
               onClick={() => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("user");
-                navigate("/login");
+                navigate("/");
               }}
               className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 px-5 rounded-lg transition duration-300 ease-in-out flex items-center gap-2 shadow-md"
             >

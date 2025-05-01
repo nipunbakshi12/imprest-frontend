@@ -4,6 +4,9 @@ import { BiNotification } from "react-icons/bi";
 import { FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { IoNotificationsOutline } from "react-icons/io5";
+import { BsJournalBookmarkFill } from "react-icons/bs";
+
+
 // import { FaUserPlus } from "react-icons/fa";
 import Modal from './Modal'
 import toast from "react-hot-toast";
@@ -33,6 +36,17 @@ const AdminDashboard = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+
+  // LEDGER
+  // const [isModalOpenLedger, setIsModalOpenLedger] = useState(false);
+
+
+
+
+
+
+
 
   // Notification Modals
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
@@ -120,6 +134,7 @@ const AdminDashboard = () => {
     if (res.data.success) {
       toast.success("Funds has been sent")
       setRefillAmount("")
+      getDisbursedFunds()
     }
   };
 
@@ -139,8 +154,9 @@ const AdminDashboard = () => {
     })
     // console.log(notifications.data.data)
     const allNotifications = notifications.data.data
-    console.log(allNotifications)
-    setNotifications(allNotifications)
+    const unreadNotifications = notifications?.data?.data.filter(noti => noti.read === false);
+    console.log("False Wale", unreadNotifications)
+    setNotifications(unreadNotifications)
   }
 
   function formatDate(isoString) {
@@ -252,6 +268,16 @@ const AdminDashboard = () => {
 
               </div> */}
 
+              <div className="realtive">
+                <div
+                  className="text-3xl cursor-pointer"
+                  onClick={() => navigate('/ledger')}
+                >
+                  <BsJournalBookmarkFill />
+                </div>
+              </div>
+
+
               <div className="relative">
                 {/* Notification Icon that triggers the modal on click */}
                 <div className="text-3xl cursor-pointer" onClick={openNotificationModal}>
@@ -270,14 +296,14 @@ const AdminDashboard = () => {
                       {notifications.map((n, i) => (
                         <div
                           key={i}
-                          className="bg-blue-100 text-blue-800 p-4 rounded-lg shadow-md hover:bg-blue-200 transition duration-300 ease-in-out"
+                          className="text-blue-800 p-4 rounded-lg shadow-sm hover:bg-blue-400 hover:text-white transition duration-300 ease-in-out"
                         >
                           <p>
                             {n.message} - {formatDate(n.createdAt)}
                             <span
                               onClick={() => handleRead(n._id)}
-                              className={`ml-2 cursor-pointer transition duration-300 ease-in-out ${isReading ? 'text-red-600' : 'text-blue-600'
-                                } underline hover:text-red-800`} // Conditional styling
+                              className={`ml-2 cursor-pointer transition duration-300 ease-in-out ${isReading ? 'text-red-600' : 'text-white-600'
+                                } underline hover:text-red-200`} // Conditional styling
                             >
                               Mark as read
                             </span>
@@ -285,6 +311,9 @@ const AdminDashboard = () => {
                         </div>
                       ))}
                     </div>
+                    <button className="mt-4 mr-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out" onClick={() => navigate('/all-notifications')}>
+                      All Notifications
+                    </button>
                     <button
                       onClick={closeNotificationModal}
                       className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ease-in-out"
@@ -425,27 +454,25 @@ const AdminDashboard = () => {
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {approvedRequests.map((req, index) => (
-                          <tr key={index} className="hover:bg-gray-50">
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              {req.description}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-green-600 font-medium">
-                              ₹{req.amount}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              {req.department}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              {convertToReadableDate(req.createdAt)}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-blue-300  ">
-                              <button onClick={(e) => handleModalOpen(e)}>
-                                <FaEye />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
+                        {approvedRequests
+                          .filter((req) => req.status === "Approv")
+                          .map((req, index) => (
+                            <tr key={index} className="hover:bg-gray-50">
+                              <td className="px-6 py-4 whitespace-nowrap">{req.description}</td>
+                              <td className="px-6 py-4 whitespace-nowrap text-green-600 font-medium">
+                                ₹{req.amount}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap">{req.department}</td>
+                              <td className="px-6 py-4 whitespace-nowrap">
+                                {convertToReadableDate(req.createdAt)}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-blue-300">
+                                <button onClick={(e) => handleModalOpen(e)}>
+                                  <FaEye />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
                       </tbody>
                     </table>
                   </div>

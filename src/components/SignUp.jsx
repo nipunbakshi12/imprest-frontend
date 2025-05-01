@@ -28,26 +28,27 @@ const LoginPage = () => {
       role,
       department,
     });
+    // console.log("Response12", response)
 
-    if (response.data.token) {
-      navigate('/login')
+    if (response?.data?.token) {
       toast.success("New Account Created Successfully")
+      navigate('/')
     }
 
-    console.log("api response", response);
+    // console.log("api response", response);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-blue-200">
-      <div className="bg-white p-8 rounded-xl shadow-2xl w-96 space-y-6">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">
+    <div className="flex items-center justify-center min-h-screen bg-[#2b7efe]">
+      <div className="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-lg space-y-6">
+        <h2 className="text-3xl font-extrabold text-center text-gray-800 mb-6">
           Sign Up
         </h2>
 
         <div className="space-y-4">
-          {/* Email Input */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
               Email Address
             </label>
             <input
@@ -55,13 +56,13 @@ const LoginPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
             />
           </div>
 
-          {/* Password Input */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
               Password
             </label>
             <input
@@ -69,73 +70,65 @@ const LoginPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
             />
           </div>
 
-          {/* Role Selection */}
-          <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">
+          {/* Role */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
               Select Role
             </label>
             <select
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200"
               value={role}
               onChange={handleRoleChange}
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
             >
               <option value="">-- Select Role --</option>
-              {roles.map((roleOption) => (
-                <option key={roleOption} value={roleOption}>
-                  {roleOption}
-                </option>
+              {roles.map((r) => (
+                <option key={r} value={r}>{r}</option>
               ))}
             </select>
           </div>
 
-          {/* Department Selection - Shown only for Employee and Manager */}
+          {/* Department */}
           {(role === "Employee" || role === "Manager") && (
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">
                 Select Department
               </label>
               <select
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition duration-200"
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
               >
                 <option value="">-- Select Department --</option>
                 {departments.map((dept) => (
-                  <option key={dept} value={dept}>
-                    {dept}
-                  </option>
+                  <option key={dept} value={dept}>{dept}</option>
                 ))}
               </select>
             </div>
           )}
         </div>
 
-        {/* Login Button */}
+        {/* Submit Button */}
         <button
           onClick={handleLogin}
-          className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-0.5"
+          className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg transition duration-300 transform hover:-translate-y-1"
         >
           Sign Up
         </button>
 
-        {/* Additional Links */}
-        <div className="text-center space-y-2">
-          <p className="text-sm text-gray-600">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="text-blue-600 hover:text-blue-800 font-semibold"
-            >
-              Sign In Here
-            </Link>
-          </p>
-        </div>
+        {/* Link */}
+        <p className="text-sm text-center text-gray-600">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 hover:text-blue-800 font-semibold">
+            Sign In Here
+          </Link>
+        </p>
       </div>
     </div>
+
   );
 };
 

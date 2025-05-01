@@ -5,6 +5,8 @@ import RaiseRequest from './components/RaiseRequest'
 import ManagerDashboard from './components/ManagerDashboard'
 import AdminDashboard from './components/AdminDashboard'
 import SignUp from './components/SignUp'
+import AllNotifications from './components/AllNotifications'
+import Ledger from './components/Ledger'
 
 const App = () => {
   return (
@@ -15,6 +17,8 @@ const App = () => {
         <Route path="/employee-dashboard" element={<RaiseRequest />} />
         <Route path="/manager-dashboard" element={<ManagerDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/ledger" element={<Ledger />} />
+        <Route path="/all-notifications" element={<AllNotifications />} />
       </Routes>
     </div>
   )
