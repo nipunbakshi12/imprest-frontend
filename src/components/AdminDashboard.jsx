@@ -61,7 +61,7 @@ const AdminDashboard = () => {
 
   const fetchAdminLeads = async () => {
     const response = await axios.get(
-      'http://localhost:5000/api/imprest/getAdminData'
+      'https://imprest-backend-1.onrender.com/api/imprest/getAdminData'
     );
     const data = response.data.data;
     setApprovedRequests(data);
@@ -120,7 +120,7 @@ const AdminDashboard = () => {
 
   const handleRefill = async () => {
     const token = localStorage.getItem('token')
-    const res = await axios.post('http://localhost:5000/api/imprest/refillAmount',
+    const res = await axios.post('https://imprest-backend-1.onrender.com/api/imprest/refillAmount',
       {
         refillAmount: refillAmount,
         department: selectedDepartment
@@ -139,7 +139,7 @@ const AdminDashboard = () => {
   };
 
   const getDisbursedFunds = async () => {
-    const res1 = await axios.get('http://localhost:5000/api/imprest/disbursedFunds')
+    const res1 = await axios.get('https://imprest-backend-1.onrender.com/api/imprest/disbursedFunds')
     const disbursedFunds = res1.data.data
     setDisbursedFunds(disbursedFunds)
   }
@@ -147,7 +147,7 @@ const AdminDashboard = () => {
   // GET NOTIFICATIONS
   const getNotifications = async () => {
     const token = localStorage.getItem("token");
-    const notifications = await axios.get('http://localhost:5000/api/imprest/notification', {
+    const notifications = await axios.get('https://imprest-backend-1.onrender.com/api/imprest/notification', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -183,7 +183,7 @@ const AdminDashboard = () => {
       console.log("id", id)
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        `http://localhost:5000/api/imprest/notification/${id}`,
+        `https://imprest-backend-1.onrender.com/api/imprest/notification/${id}`,
         { read: true },
         {
           headers: {

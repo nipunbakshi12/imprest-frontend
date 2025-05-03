@@ -9,7 +9,7 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const Base_URL = "http://localhost:5000";
+  const Base_URL = "https://imprest-backend-1.onrender.com";
 
   const handleLogin = async () => {
     try {

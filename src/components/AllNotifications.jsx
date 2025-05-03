@@ -9,7 +9,7 @@ const AllNotifications = () => {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/imprest/getAllNotification');
+                const response = await fetch('https://imprest-backend-1.onrender.com/api/imprest/getAllNotification');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

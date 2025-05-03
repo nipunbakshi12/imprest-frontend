@@ -39,7 +39,7 @@
 
 //   const balance = async () => {
 //     const token = localStorage.getItem("token");
-//     const res = await axios.get(`http://localhost:5000/api/imprest/getRefillAmount`, {
+//     const res = await axios.get(`https://imprest-backend-1.onrender.com/api/imprest/getRefillAmount`, {
 //       headers: {
 //         Authorization: `Bearer ${token}`,
 //       },
@@ -57,7 +57,7 @@
 //       let status = action === "approve" ? "Approv" : "Reject";
 
 //       const response = await axios.put(
-//         `http://localhost:5000/api/imprest/updateRequestStatus/${id}`,
+//         `https://imprest-backend-1.onrender.com/api/imprest/updateRequestStatus/${id}`,
 //         {
 //           requestId: id,
 //           status: status,
@@ -94,7 +94,7 @@
 
 //   const handleUrgentFunds = async () => {
 //     const token = localStorage.getItem("token");
-//     const res = await axios.post('http://localhost:5000/api/imprest/requestUrgentFundsFromAdmin',
+//     const res = await axios.post('https://imprest-backend-1.onrender.com/api/imprest/requestUrgentFundsFromAdmin',
 //       { funds_required: 1 },
 //       {
 //         headers: {
@@ -108,7 +108,7 @@
 //     const token = localStorage.getItem("token");
 //     console.log("token is", token);
 //     const manData = await axios.get(
-//       "http://localhost:5000/api/imprest/getManagerData",
+//       "https://imprest-backend-1.onrender.com/api/imprest/getManagerData",
 //       {
 //         headers: {
 //           Authorization: `Bearer ${token}`,
@@ -362,7 +362,7 @@ const ManagerDashboard = () => {
 
   const balance = async () => {
     const token = localStorage.getItem("token");
-    const res = await axios.get(`http://localhost:5000/api/imprest/getRefillAmount`, {
+    const res = await axios.get(`https://imprest-backend-1.onrender.com/api/imprest/getRefillAmount`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -379,7 +379,7 @@ const ManagerDashboard = () => {
       let status = action === "approve" ? "Approv" : "Reject";
 
       const response = await axios.put(
-        `http://localhost:5000/api/imprest/updateRequestStatus/${id}`,
+        `https://imprest-backend-1.onrender.com/api/imprest/updateRequestStatus/${id}`,
         {
           requestId: id,
           status: status,
@@ -425,7 +425,7 @@ const ManagerDashboard = () => {
   const updateRefillAmount = async (newAmount) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.post('http://localhost:5000/api/imprest/updateRefillAmount',
+      await axios.post('https://imprest-backend-1.onrender.com/api/imprest/updateRefillAmount',
         { newAmount: newAmount },
         {
           headers: {
@@ -440,7 +440,7 @@ const ManagerDashboard = () => {
 
   const handleUrgentFunds = async () => {
     const token = localStorage.getItem("token");
-    const res = await axios.post('http://localhost:5000/api/imprest/requestUrgentFundsFromAdmin',
+    const res = await axios.post('https://imprest-backend-1.onrender.com/api/imprest/requestUrgentFundsFromAdmin',
       { funds_required: 1 },
       {
         headers: {
@@ -457,7 +457,7 @@ const ManagerDashboard = () => {
     const token = localStorage.getItem("token");
     console.log("token is", token);
     const manData = await axios.get(
-      "http://localhost:5000/api/imprest/getManagerData",
+      "https://imprest-backend-1.onrender.com/api/imprest/getManagerData",
       {
         headers: {
           Authorization: `Bearer ${token}`,

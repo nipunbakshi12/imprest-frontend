@@ -15,37 +15,29 @@ const RaiseRequest = () => {
     "Finance",
     "IT",
     "Operations",
-  ]); // Add your department names
-  const [vendors, setVendors] = useState([
-    {
-      id: 1,
-      name: "Vendor A",
-      category: "IT Equipment",
-      rating: "4.5",
-      payment: "Full Advance",
-    },
-    {
-      id: 2,
-      name: "Vendor B",
-      category: "Office Supplies",
-      rating: "3.5",
-      payment: "Partial Payment",
-    },
-    {
-      id: 3,
-      name: "Vendor C",
-      category: "Software",
-      rating: "4.5",
-      payment: "Credit",
-    },
-    {
-      id: 4,
-      name: "Vendor D",
-      category: "Hardware",
-      rating: "3.8",
-      payment: "Installments",
-    },
   ]);
+
+  const Vendors = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "https://imprest-backend-1.onrender.com/api/imprest/getVendorList",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("get api", response);
+      setVendors(response?.data?.data);
+      // setSelectedVendor(response?.data?.data);
+    } catch (error) {
+      console.error("Error fetching requests:", error);
+      toast.error("Failed to fetch previous requests");
+    }
+  }
+
+  const [vendors, setVendors] = useState([]);
   const [selectedVendor, setSelectedVendor] = useState(null);
 
   const [isMultiLevel, setIsMultiLevel] = useState(false);
@@ -134,13 +126,14 @@ const RaiseRequest = () => {
 
   useEffect(() => {
     fetchAllImprests();
+    Vendors()
   }, []);
 
   const fetchAllImprests = async () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:5000/api/imprest/getAllImprestForEmployees",
+        "https://imprest-backend-1.onrender.com/api/imprest/getAllImprestForEmployees",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -160,7 +153,7 @@ const RaiseRequest = () => {
   //   const token = localStorage.getItem("token");
 
   //   const res = await axios.post(
-  //     "http://localhost:5000/api/imprest/createImprest",
+  //     "https://imprest-backend-1.onrender.com/api/imprest/createImprest",
   //     {
   //       description,
   //       amount,
@@ -188,7 +181,7 @@ const RaiseRequest = () => {
   // const table = async () => {
   //   const token = localStorage.getItem("token");
   //   const response = await axios.get(
-  //     "http://localhost:5000/api/imprest/getAllImprestForEmployees",
+  //     "https://imprest-backend-1.onrender.com/api/imprest/getAllImprestForEmployees",
   //     {
   //       headers: {
   //         Authorization: `Bearer ${token}`,
@@ -218,13 +211,13 @@ const RaiseRequest = () => {
     console.log("token is", token);
 
     const response = await axios.post(
-      "http://localhost:5000/api/imprest/createImprest",
+      "https://imprest-backend-1.onrender.com/api/imprest/createImprest",
       {
         description,
         amount,
         urgencyLevel: urgency,
-        vendorName: selectedVendor?.name,
-        paymentDetail: selectedVendor?.payment,
+        vendorName: selectedVendor?.vendorName,
+        paymentDetail: selectedVendor?.payementTerms,
       },
       {
         headers: {
@@ -360,13 +353,13 @@ const RaiseRequest = () => {
                             <input
                               type="radio"
                               name="vendor"
-                              checked={selectedVendor?.id === vendor.id}
+                              //checked={selectedVendor?.id === vendor.id}
                               onChange={() => setSelectedVendor(vendor)}
                               className="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300"
                             />
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            {vendor.name}
+                            {vendor.vendorName}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             {vendor.category}
@@ -375,7 +368,7 @@ const RaiseRequest = () => {
                             {vendor.rating}
                           </td>
                           <td className="px-6 py-4 text-yellow-500 text-lg whitespace-nowrap">
-                            {vendor.payment}
+                            {vendor.payementTerms}
                           </td>
                         </tr>
                       ))}

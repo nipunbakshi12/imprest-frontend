@@ -76,7 +76,7 @@ const Ledger = () => {
             try {
                 const token = localStorage.getItem('token');
                 const res = await axios.get(
-                    'http://localhost:5000/api/imprest/getLedgerForAdmin',
+                    'https://imprest-backend-1.onrender.com/api/imprest/getLedgerForAdmin',
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
                 setDepartments(res.data.data);
